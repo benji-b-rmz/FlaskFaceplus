@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MASHAPE API TESTER</title>
+    <!-- using Bootstrap for styling -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<!-- =============PAGE CONTENT ======================= -->
+<div class="container" id="content">
+
+    <div class="row text-center">
+        <h1>Test some APIs from Mashape Marketplace</h1>
+    </div>
+
+    <div class="row">
+
+        <!-- the input section -->
+        <div class="col-sm-6">
+            <h3>Sentiment API</h3>
+            <div class="form-group">
+                <label for="input-text"><h1>Enter some words:</h1></label>
+                <textarea type="text" class="form-control" rows="4" id="input-sent-text"></textarea>
+                <button id="sent-submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+
+        <!-- The output section -->
+        <div class="col-sm-6 text-center">
+
+            <h2>Sentiment Output:</h2>
+            <div id="sent-output">
+                sentiment output
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 text-center">
+            Leveraging the Mashape API:
+            <a href="https://market.mashape.com/ronreiter/meme-generator">https://market.mashape.com/ronreiter/meme-generator</a>
+            <br>
+        </div>
+    </div>
+</div>
+
+<!-- =================== END OF PAGE CONTENT =================== -->
+
+
+
+<!-- =================== JavaScript ========================= -->
+<!-- scripts, jQuery for AJAX API calls-->
+<script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+</script>
+<!-- Bootstrap's js script -->
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- application script to communicate with the Flask backend -->
+<script type="text/javascript">
+    $(document).on('click','#sent-submit',function () {
+        console.log("clicked on submit!");
+        var words = $('#input-sent-text');
+        console.log(words);
+        //set output to processing gif while we wait for ajax response
+        var gif =  "<div class='text-center'> Processing...<br/><img class='text-center' src='http://24.media.tumblr.com/4c5070a4f871a1d2b1e24b70e8acc496/tumblr_mqd5ibdXgi1sc6f01o1_500.gif'/> </div>";
+        $("#sent-output").html(gif);
+        $.ajax({
+            url:'/api/sent_analysis',
+            method: 'POST',
+            contentType: 'text/plain',
+            data: words,
+            success: function(result){
+                $("#sent-output").html(result);
+            },
+        });
+    });
+</script>
+
+</body>
+
+</html>
