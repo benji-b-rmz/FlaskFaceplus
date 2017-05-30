@@ -4,7 +4,7 @@ import unirest
 
 app = Flask(__name__)
 
-MASHAPE_KEY = "YOUR MASHAPE KEY"
+MASHAPE_KEY = "YOUR MASHAPE KEY HERE"
 
 def faceplus(input_url):
     try:
@@ -17,13 +17,15 @@ def faceplus(input_url):
             }
             )
         print(face_response.body)
-        face_response.body['success'] = 'true'
-        json_response = json.dumps(face_response.body)
-        return json_response
+        if face_response.body['url'] != None:
+            face_response.body['message'] = "success"
+            return json.dumps(face_response.body)
+        face_response.body['message'] = 'failed'
+        return json.dumps(face_response.body)
+
     except:
         print("unirest failed")
-        response = {}
-        response['success'] = 'false'
+        response = {'message': 'failed'}
         json_response = json.dumps(response)
         return json_response
 
@@ -37,4 +39,4 @@ def hello_world():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
